@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="mainBorderPane" prefHeight="455.0" prefWidth="859.0" xmlns="http://javafx.com/javafx/11.0.1"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sdilavar.phonebook.Controller">
+    <top>
+        <MenuBar>
+            <Menu text="Файл">
+                <MenuItem text="Добавить"/>
+                <SeparatorMenuItem/>
+                <MenuItem text="Редактировать"/>
+                <SeparatorMenuItem/>
+                <MenuItem text="Удалить"/>
+                <SeparatorMenuItem/>
+                <MenuItem text="Выход"/>
+            </Menu>
+            <Menu text="Настройки">
+                <MenuItem text="Импортировать" onAction="#showImportDialog"/>
+                <SeparatorMenuItem/>
+                <MenuItem text="Экспортировать" onAction="#showExportDialog"/>
+            </Menu>
+            <Menu>
+                <graphic>
+                    <Label text="Справка" onMouseClicked="#showAboutDialog"/>
+                </graphic>
+            </Menu>
+        </MenuBar>
+    </top>
+
+    <center>
+        <TableView fx:id="tableView" BorderPane.alignment="CENTER">
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
+            <columns>
+                <TableColumn editable="false" sortable="false" text="Фамилия">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="lastname"/>
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn editable="false" sortable="false" text="Имя">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="firstName"/>
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn editable="false" sortable="false" text="Отчество">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="patronymic"/>
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn editable="false" sortable="false" text="Мобильный &#10;телефон">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="cellNumber"/>
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn editable="false" sortable="false" text="Домашний &#10;телефон">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="homeNumber"/>
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn editable="false" sortable="false" text="Адрес">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="address"/>
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn editable="false" sortable="false" text="День&#10;рождения">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="birthDate"/>
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn editable="false" sortable="false" text="Комментарий">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="comment"/>
+                    </cellValueFactory>
+                </TableColumn>
+            </columns>
+        </TableView>
+    </center>
+
+    <bottom>
+        <HBox>
+            <Button alignment="CENTER" prefHeight="26.0" prefWidth="120.0" text="Удалить" HBox.hgrow="ALWAYS"/>
+            <Button prefHeight="26.0" prefWidth="126.0" text="Редактировать" HBox.hgrow="ALWAYS"/>
+            <Button prefHeight="26.0" prefWidth="126.0" text="Добавить" HBox.hgrow="ALWAYS"/>
+            <TextField promptText="Строка поиска" HBox.hgrow="ALWAYS"/>
+            <Button prefHeight="26.0" prefWidth="126.0" text="Поиск" HBox.hgrow="ALWAYS"/>
+        </HBox>
+    </bottom>
+</BorderPane>
