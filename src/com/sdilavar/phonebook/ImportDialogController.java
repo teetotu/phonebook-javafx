@@ -8,6 +8,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
 import java.io.IOException;
+import java.text.ParseException;
 
 public class ImportDialogController {
     @FXML
@@ -15,24 +16,15 @@ public class ImportDialogController {
 
     @FXML
     public void importData() {
-        if (!pathTextField.toString().trim().isEmpty()) {
+        if (!pathTextField.getText().trim().isEmpty()) {
             try {
-                ContactData.getInstance().loadContacts(pathTextField.toString());
-            } catch (IOException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("IOException: the specified path led to an error, check it again");
-
-                ScrollPane scroll = new ScrollPane();
-                scroll.setContent(new TextArea(e.getMessage()));
-
-                alert.getDialogPane().setContent(scroll);
-                alert.showAndWait();
-
-                e.printStackTrace();
+                ContactData.getInstance().loadContacts(pathTextField.getText());
+            } catch (Exception e) {
+                Utils.alertUser(e);
             }
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("An unknown error occurred");
+            alert.setContentText("Enter a path to import data from");
             alert.showAndWait();
         }
     }

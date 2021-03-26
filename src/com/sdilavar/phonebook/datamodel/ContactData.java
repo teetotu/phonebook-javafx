@@ -9,8 +9,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Arrays;
 
 public class ContactData {
 
@@ -39,14 +42,15 @@ public class ContactData {
         contacts.add(contact);
     }
 
-    public void loadContacts(String fileName) throws IOException {
+    public void loadContacts(String fileName) throws IOException, DateTimeParseException,
+            ArrayIndexOutOfBoundsException {
         Path path = Paths.get(fileName);
 
         String input;
 
         try (BufferedReader br = Files.newBufferedReader(path)) {
             while ((input = br.readLine()) != null) {
-                String[] entry = input.split("\t");
+                String[] entry = input.split(";");
                 String lastName = entry[0];
                 String firstName = entry[1];
                 String patronymic = entry[2];
@@ -58,6 +62,7 @@ public class ContactData {
                 LocalDate birthDate = LocalDate.parse(birthDateString, dateTimeFormatter);
                 Contact contact = new Contact(lastName, firstName, patronymic,
                         cellNumber, homeNumber, address, birthDate);
+                System.out.println(contact);
                 contacts.add(contact);
             }
         }
@@ -67,7 +72,7 @@ public class ContactData {
         Path path = Paths.get(fileName);
         try (BufferedWriter bw = Files.newBufferedWriter(path)) {
             for (Contact contact : contacts) {
-                bw.write(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s",
+                bw.write(String.format("%s;%s;%s;%s;%s;%s;%s",
                         contact.getLastName(),
                         contact.getFirstName(),
                         contact.getPatronymic(),

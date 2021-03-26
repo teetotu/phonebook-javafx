@@ -77,4 +77,17 @@ public class Contact {
     public void setBirthdate(LocalDate birthdate) {
         this.birthdate = birthdate;
     }
+
+    @Override
+    public String toString() {
+        return "Contact{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", patronymic='" + patronymic + '\'' +
+                ", cellNumber=" + cellNumber +
+                ", homeNumber=" + homeNumber +
+                ", address='" + address + '\'' +
+                ", birthdate=" + birthdate +
+                '}';
+    }
 }

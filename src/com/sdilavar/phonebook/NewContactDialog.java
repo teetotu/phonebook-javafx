@@ -19,4 +19,9 @@ public class NewContactDialog {
     private TextField lastNameField;
     @FXML
     private TextField firstNameField;
+
+    @FXML
+    public void processInput() {
+
+    }
 }

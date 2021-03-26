@@ -1,12 +1,9 @@
 package com.sdilavar.phonebook;
 
-import com.sdilavar.phonebook.datamodel.Contact;
+import com.sdilavar.phonebook.datamodel.ContactData;
 import javafx.fxml.FXML;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
-
-import java.time.LocalDate;
 
 public class ExportDialogController {
     @FXML
@@ -14,6 +11,16 @@ public class ExportDialogController {
 
     @FXML
     public void exportData() {
-        // TODO: 23.03.2021 export data
+        if (!pathTextField.getText().trim().isEmpty()) {
+            try {
+                ContactData.getInstance().storeContacts(pathTextField.getText());
+            } catch (Exception e) {
+                Utils.alertUser(e);
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("Enter a path to export data to");
+            alert.showAndWait();
+        }
     }
 }
