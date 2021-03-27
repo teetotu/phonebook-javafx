@@ -53,8 +53,8 @@ public class Contact {
 
     public Contact(String firstName, String lastName, String patronymic, PhoneNumber cellNumber, PhoneNumber homeNumber,
                    String address, LocalDate birthdate, String comment) {
-        if (firstName.trim().isEmpty() && lastName.trim().isEmpty() &&
-                (!cellNumber.isSpecified() || !homeNumber.isSpecified())) {
+        if (firstName.trim().isEmpty() || lastName.trim().isEmpty() ||
+                (!cellNumber.isSpecified() && !homeNumber.isSpecified())) {
             throw new NullPointerException("Not enough data | missing important information");
         }
         this.firstName = new SimpleStringProperty(firstName.trim());
@@ -136,17 +136,21 @@ public class Contact {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Contact contact = (Contact) o;
-        return firstName.equals(contact.firstName) && lastName.equals(contact.lastName) &&
-                Objects.equals(patronymic, contact.patronymic);
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
+        Contact contact = (Contact) other;
+        return firstName.get().equals(contact.firstName.get()) && lastName.get().equals(contact.lastName.get()) &&
+                patronymic.get().equals(contact.patronymic.get());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstName, lastName, patronymic);
+        return Objects.hash(firstName.get(), lastName.get(), patronymic.get());
     }
 
     @Override

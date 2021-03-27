@@ -38,7 +38,30 @@ public class ContactData {
     }
 
     public void addContact(Contact contact) {
-        contacts.add(contact);
+        boolean isAlreadyInList = false;
+        boolean shouldAdd = true;
+        String firstName = "";
+        while (contacts.contains(contact)) {
+            firstName = contact.getFirstName();
+            contact.setFirstName(contact.getFirstName() + "(copy)");
+            isAlreadyInList = true;
+        }
+        if (isAlreadyInList) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setHeaderText(String.format("Повторный контакт %s %s", firstName, contact.getLastName()));
+
+            ScrollPane scroll = new ScrollPane();
+            scroll.setContent(new TextArea("Встречен повторный контакт, чтобы пропустить нажмите Отмена,\n " +
+                    "если вы хотите добавить его как '" + contact.getFirstName() + "' Нажмтие Ок"));
+            alert.getDialogPane().setContent(scroll);
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.CANCEL) {
+                shouldAdd = false;
+            }
+        }
+        if (shouldAdd) {
+            contacts.add(contact);
+        }
     }
 
     public void loadContacts(File file) throws IOException, DateTimeParseException,
@@ -47,7 +70,7 @@ public class ContactData {
         String input;
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            while ((input = br.readLine()) != null) {
+            while ((input = br.readLine()) != null && !input.isEmpty()) {
                 String[] entry = input.split(";");
                 String lastName = entry[0].trim();
                 String firstName = entry[1].trim();
@@ -60,27 +83,14 @@ public class ContactData {
                 if (entry.length == 8) {
                     comment = entry[7].trim();
                 }
+                LocalDate birthDate = null;
                 if (!birthDateString.isEmpty()) {
-                    LocalDate birthDate = LocalDate.parse(birthDateString, dateTimeFormatter);
+                    birthDate = LocalDate.parse(birthDateString, dateTimeFormatter);
                 }
-                Contact contact = new Contact(firstName, lastName, patronymic,
-                        cellNumber, homeNumber, address, null, comment);
-                if (contacts.contains(contact)) {
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                    alert.setHeaderText("Повторный контакт");
 
-                    ScrollPane scroll = new ScrollPane();
-                    scroll.setContent(new TextArea("Встречен повторный контакт, чтобы пропустить нажмите Отмена, " +
-                            "если вы хотите добавить его как '" + contact.getFirstName() + "(copy)' Нажмтие Ок"));
-                    alert.getDialogPane().setContent(scroll);
-                    Optional<ButtonType> result = alert.showAndWait();
-                    if (result.isPresent() && result.get() == ButtonType.OK) {
-                        contact.setFirstName(contact.getFirstName() + "(copy)");
-                        contacts.add(contact);
-                    }
-                } else {
-                    addContact(contact);
-                }
+                Contact newContact = new Contact(firstName, lastName, patronymic,
+                        cellNumber, homeNumber, address, birthDate, comment);
+                addContact(newContact);
             }
         }
     }
@@ -101,9 +111,7 @@ public class ContactData {
                             contact.getComment()
                     ));
                 } catch (Exception e) {
-                    if (contact == null) System.out.println("contact");
-                    if (contact.getBirthdate() == null) System.out.println("birthdate");
-                    if (dateTimeFormatter == null) System.out.println("dateTimeFormatter");
+                    Utils.alertUser(e);
                 }
                 bw.newLine();
             }

@@ -11,14 +11,14 @@
                 <SeparatorMenuItem/>
                 <MenuItem text="Редактировать"/>
                 <SeparatorMenuItem/>
-                <MenuItem text="Удалить"/>
+                <MenuItem text="Удалить" onAction="#rowDeletionHandler"/>
                 <SeparatorMenuItem/>
-                <MenuItem text="Выход" onAction="#closeAppAction"/>
+                <MenuItem text="Выход" onAction="#applicationClosingHandler"/>
             </Menu>
             <Menu text="Настройки">
-                <MenuItem text="Импортировать" onAction="#importContactsDialog"/>
+                <MenuItem text="Импортировать" onAction="#contactImportHandler"/>
                 <SeparatorMenuItem/>
-                <MenuItem text="Экспортировать" onAction="#exportContactsDialog"/>
+                <MenuItem text="Экспортировать" onAction="#contactExportHandler"/>
             </Menu>
             <Menu>
                 <graphic>
@@ -62,12 +62,13 @@
 
     <bottom>
         <HBox>
-            <Button alignment="CENTER" prefHeight="26.0" prefWidth="120.0" text="Удалить" HBox.hgrow="ALWAYS"/>
-            <Button prefHeight="26.0" prefWidth="126.0" text="Редактировать" HBox.hgrow="ALWAYS"/>
-            <Button prefHeight="26.0" prefWidth="126.0" text="Добавить" HBox.hgrow="ALWAYS"
+            <Button text="Удалить" alignment="CENTER" prefHeight="26.0" prefWidth="120.0" HBox.hgrow="ALWAYS"
+                    onAction="#rowDeletionHandler"/>
+            <Button text="Редактировать" prefHeight="26.0" prefWidth="126.0" HBox.hgrow="ALWAYS"/>
+            <Button text="Добавить" prefHeight="26.0" prefWidth="126.0" HBox.hgrow="ALWAYS"
                     onAction="#showNewContactDialog"/>
-            <TextField promptText="Строка поиска" HBox.hgrow="ALWAYS"/>
-            <Button prefHeight="26.0" prefWidth="126.0" text="Поиск" HBox.hgrow="ALWAYS"/>
+            <TextField fx:id="searchField" promptText="Строка поиска" HBox.hgrow="ALWAYS"/>
+            <Button text="Поиск" prefHeight="26.0" prefWidth="126.0" HBox.hgrow="ALWAYS" onAction="#searchHandler"/>
         </HBox>
     </bottom>
 </BorderPane>

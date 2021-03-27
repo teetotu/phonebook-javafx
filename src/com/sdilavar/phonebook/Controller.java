@@ -9,16 +9,20 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Controller {
+    @FXML
+    private TextField searchField;
     @FXML
     private TableView<Contact> tableView;
     @FXML
@@ -40,35 +44,41 @@ public class Controller {
     @FXML
     private BorderPane mainBorderPane;
 
-    private ObservableList<Contact> contacts;
+    private final ObservableList<Contact> contacts = FXCollections.observableArrayList();
 
     @FXML
-    public void initialize() {
+    private void initialize() {
         try {
             File f = new File("data.txt");
             if (f.exists()) {
                 ContactData.getInstance().loadContacts(f);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Utils.alertUser(e);
         }
+//        tableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
-        firstName.setCellValueFactory(data -> data.getValue().firstNameProperty());
-        lastName.setCellValueFactory(data -> data.getValue().lastNameProperty());
-        patronymic.setCellValueFactory(data -> data.getValue().patronymicProperty());
-        cellNumber.setCellValueFactory(data -> data.getValue().cellNumberProperty());
-        homeNumber.setCellValueFactory(data -> data.getValue().homeNumberProperty());
-        address.setCellValueFactory(data -> data.getValue().addressProperty());
-        birthdate.setCellValueFactory(data -> data.getValue().birthdateProperty());
-        comment.setCellValueFactory(data -> data.getValue().commentProperty());
+        searchField.textProperty().addListener((observableValue, s, t1) -> {
+            if (searchField.getText().trim().isEmpty()) {
+                tableView.getItems().setAll(contacts);
+            }
+        });
 
-        contacts = FXCollections.observableArrayList();
+        firstName.setCellValueFactory(column -> column.getValue().firstNameProperty());
+        lastName.setCellValueFactory(column -> column.getValue().lastNameProperty());
+        patronymic.setCellValueFactory(column -> column.getValue().patronymicProperty());
+        cellNumber.setCellValueFactory(column -> column.getValue().cellNumberProperty());
+        homeNumber.setCellValueFactory(column -> column.getValue().homeNumberProperty());
+        address.setCellValueFactory(column -> column.getValue().addressProperty());
+        birthdate.setCellValueFactory(column -> column.getValue().birthdateProperty());
+        comment.setCellValueFactory(column -> column.getValue().commentProperty());
+
         contacts.addAll(ContactData.getInstance().getContacts());
         tableView.getItems().setAll(contacts);
     }
 
     @FXML
-    public void exportContactsDialog() {
+    private void contactExportHandler() {
         FileChooser fileChooser = new FileChooser();
         File selectedFile = fileChooser.showOpenDialog(null);
         try {
@@ -81,7 +91,7 @@ public class Controller {
     }
 
     @FXML
-    public void importContactsDialog() {
+    private void contactImportHandler() {
         FileChooser fileChooser = new FileChooser();
         File selectedFile = fileChooser.showOpenDialog(null);
         try {
@@ -91,10 +101,12 @@ public class Controller {
         } catch (Exception e) {
             Utils.alertUser(e);
         }
+
+        tableView.getItems().setAll(ContactData.getInstance().getContacts());
     }
 
     @FXML
-    public void showAboutDialog() {
+    private void showAboutDialog() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText("Справка");
         alert.setGraphic(null);
@@ -105,7 +117,7 @@ public class Controller {
     }
 
     @FXML
-    public void showNewContactDialog() {
+    private void showNewContactDialog() {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.initOwner(mainBorderPane.getScene().getWindow());
         FXMLLoader fxmlLoader = new FXMLLoader();
@@ -126,17 +138,39 @@ public class Controller {
             try {
                 Contact newContact = controller.processInput();
                 ContactData.getInstance().addContact(newContact);
-                contacts.add(newContact);
+                tableView.getItems().add(newContact);
             } catch (Exception e) {
-                System.out.println("error");
                 Utils.alertUser(e);
             }
         }
     }
 
+    @FXML
+    private void searchHandler() {
+        String[] searchQuery = searchField.getText().trim().toLowerCase(Locale.ROOT).split(" ");
+        if (searchQuery.length != 0) {
+            List<Contact> res = contacts.stream().filter(contact -> {
+                boolean result = true;
+                for (String subQuery : searchQuery) {
+                    result &= (contact.getFirstName().toLowerCase() +
+                            contact.getLastName().toLowerCase() +
+                            contact.getPatronymic().toLowerCase()).contains(subQuery);
+                }
+
+                return result;
+            }).collect(Collectors.toList());
+            tableView.setItems(FXCollections.observableArrayList(res));
+        }
+    }
 
     @FXML
-    private void closeAppAction() {
+    private void rowDeletionHandler() {
+        tableView.getItems().remove(tableView.getSelectionModel().getSelectedItem());
+        ContactData.getInstance().getContacts().remove(tableView.getSelectionModel().getSelectedItem());
+    }
+
+    @FXML
+    private void applicationClosingHandler() {
         Stage stage = (Stage) mainBorderPane.getScene().getWindow();
         try {
             ContactData.getInstance().storeContacts(new File("data.txt"));
