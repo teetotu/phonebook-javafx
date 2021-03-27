@@ -1,81 +1,152 @@
 package com.sdilavar.phonebook.datamodel;
 
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 public class Contact {
-    private String firstName;
-    private String lastName;
-    private String patronymic;
-    private PhoneNumber cellNumber;
-    private PhoneNumber homeNumber;
-    private String address;
-    private LocalDate birthdate;
+    private SimpleStringProperty firstName;
+    private SimpleStringProperty lastName;
+    private SimpleStringProperty patronymic;
+    private SimpleObjectProperty<PhoneNumber> cellNumber;
+    private SimpleObjectProperty<PhoneNumber> homeNumber;
 
-    public Contact(String firstName, String lastName, String patronymic, PhoneNumber cellNumber, PhoneNumber homeNumber,
-                   String address, LocalDate birthdate) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.patronymic = patronymic;
-        this.cellNumber = cellNumber;
-        this.homeNumber = homeNumber;
-        this.address = address;
-        this.birthdate = birthdate;
-    }
-
-    public String getFirstName() {
+    public SimpleStringProperty firstNameProperty() {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
+    public SimpleStringProperty lastNameProperty() {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getPatronymic() {
+    public SimpleStringProperty patronymicProperty() {
         return patronymic;
     }
 
-    public void setPatronymic(String patronymic) {
-        this.patronymic = patronymic;
-    }
-
-    public PhoneNumber getCellNumber() {
+    public SimpleObjectProperty<PhoneNumber> cellNumberProperty() {
         return cellNumber;
     }
 
-    public void setCellNumber(PhoneNumber cellNumber) {
-        this.cellNumber = cellNumber;
-    }
-
-    public PhoneNumber getHomeNumber() {
+    public SimpleObjectProperty<PhoneNumber> homeNumberProperty() {
         return homeNumber;
     }
 
-    public void setHomeNumber(PhoneNumber homeNumber) {
-        this.homeNumber = homeNumber;
-    }
-
-    public String getAddress() {
+    public SimpleStringProperty addressProperty() {
         return address;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public LocalDate getBirthdate() {
+    public SimpleObjectProperty<LocalDate> birthdateProperty() {
         return birthdate;
     }
 
+    public SimpleStringProperty commentProperty() {
+        return comment;
+    }
+
+    private SimpleStringProperty address;
+    private SimpleObjectProperty<LocalDate> birthdate;
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    private SimpleStringProperty comment;
+
+    public Contact(String firstName, String lastName, String patronymic, PhoneNumber cellNumber, PhoneNumber homeNumber,
+                   String address, LocalDate birthdate, String comment) {
+        if (firstName.trim().isEmpty() && lastName.trim().isEmpty() &&
+                (!cellNumber.isSpecified() || !homeNumber.isSpecified())) {
+            throw new NullPointerException("Not enough data | missing important information");
+        }
+        this.firstName = new SimpleStringProperty(firstName.trim());
+        this.lastName = new SimpleStringProperty(lastName.trim());
+        this.patronymic = new SimpleStringProperty(patronymic.trim().isEmpty() ? "" : patronymic);
+        this.cellNumber = new SimpleObjectProperty<>(cellNumber);
+        this.homeNumber = new SimpleObjectProperty<>(homeNumber);
+        this.address = new SimpleStringProperty(address.trim());
+        this.birthdate = new SimpleObjectProperty<>(birthdate);
+        this.comment = new SimpleStringProperty(comment.trim());
+    }
+
+    public String getFirstName() {
+        return firstName.get();
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = new SimpleStringProperty(firstName);
+    }
+
+    public String getLastName() {
+        return lastName.get();
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = new SimpleStringProperty(lastName);
+    }
+
+    public String getPatronymic() {
+        return patronymic.get();
+    }
+
+    public void setPatronymic(String patronymic) {
+        this.patronymic = new SimpleStringProperty(patronymic);
+    }
+
+    public PhoneNumber getCellNumber() {
+        return cellNumber.get();
+    }
+
+    public void setCellNumber(PhoneNumber cellNumber) {
+        this.cellNumber = new SimpleObjectProperty<>(cellNumber);
+    }
+
+    public PhoneNumber getHomeNumber() {
+        return homeNumber.get();
+    }
+
+    public void setHomeNumber(PhoneNumber homeNumber) {
+        this.homeNumber = new SimpleObjectProperty<>(homeNumber);
+    }
+
+    public String getAddress() {
+        return address.get();
+    }
+
+    public void setAddress(String address) {
+        this.address = new SimpleStringProperty(address);
+    }
+
+    public LocalDate getBirthdate() {
+        return birthdate.get();
+    }
+
+    public String getBirthdateString() {
+        return birthdate.get() != null ? birthdate.get().format(dateTimeFormatter) : "";
+    }
+
     public void setBirthdate(LocalDate birthdate) {
-        this.birthdate = birthdate;
+        this.birthdate = new SimpleObjectProperty<>(birthdate);
+    }
+
+    public String getComment() {
+        return comment.get();
+    }
+
+    public void setComment(String comment) {
+        this.comment = new SimpleStringProperty(comment);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Contact contact = (Contact) o;
+        return firstName.equals(contact.firstName) && lastName.equals(contact.lastName) &&
+                Objects.equals(patronymic, contact.patronymic);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName, patronymic);
     }
 
     @Override
@@ -88,6 +159,7 @@ public class Contact {
                 ", homeNumber=" + homeNumber +
                 ", address='" + address + '\'' +
                 ", birthdate=" + birthdate +
+                ", comment='" + comment + '\'' +
                 '}';
     }
 }

@@ -3,13 +3,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<DialogPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.sdilavar.phonebook.NewContactDialog">
+<DialogPane xmlns="http://javafx.com/javafx/11.0.1"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sdilavar.phonebook.NewContactDialogController">
     <headerText>
         Instructions
     </headerText>
     <content>
-        <GridPane prefHeight="227.0" prefWidth="537.0">
+        <GridPane hgap="10">
             <Label text="Имя" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
             <TextField fx:id="firstNameField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
@@ -30,6 +30,9 @@
 
             <DatePicker fx:id="birthDateDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
             <Label text="День &#10;рождения" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+
+            <TextArea fx:id="commentTextArea" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+            <Label text="Комментарий" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
         </GridPane>
     </content>
 </DialogPane>

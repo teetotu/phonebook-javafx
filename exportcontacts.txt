@@ -1,2 +1,1 @@
-Shair;Dilavar;Khamayunovich;79261059145;74957050167;Komsomolskiy pr-t 24/2;30-08-2001
-Shair;Dilavar;Khamayunovich;79261059145;74957050167;Komsomolskiy pr-t 24/2;30-08-2001
+Dilavar;Shair;;79269999999;74959999999;какой-то проспект 1/1;01-01-2001;комментарий

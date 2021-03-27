@@ -1,40 +1,39 @@
 package com.sdilavar.phonebook.datamodel;
 
+import com.sdilavar.phonebook.Utils;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.collections.ObservableSet;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.text.ParseException;
+import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Optional;
 
 public class ContactData {
 
     private static final ContactData instance = new ContactData();
 
-    private ObservableList<Contact> contacts = FXCollections.observableArrayList();
-    private final DateTimeFormatter dateTimeFormatter;
+    private ObservableSet<Contact> contacts = FXCollections.observableSet(new LinkedHashSet<>());
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     public static ContactData getInstance() {
         return instance;
     }
 
     private ContactData() {
-        dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     }
 
-    public ObservableList<Contact> getContacts() {
+    public ObservableSet<Contact> getContacts() {
         return contacts;
     }
 
-    public void setContacts(ObservableList<Contact> contacts) {
+    public void setContacts(ObservableSet<Contact> contacts) {
         this.contacts = contacts;
     }
 
@@ -42,47 +41,73 @@ public class ContactData {
         contacts.add(contact);
     }
 
-    public void loadContacts(String fileName) throws IOException, DateTimeParseException,
+    public void loadContacts(File file) throws IOException, DateTimeParseException,
             ArrayIndexOutOfBoundsException {
-        Path path = Paths.get(fileName);
 
         String input;
 
-        try (BufferedReader br = Files.newBufferedReader(path)) {
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             while ((input = br.readLine()) != null) {
                 String[] entry = input.split(";");
-                String lastName = entry[0];
-                String firstName = entry[1];
-                String patronymic = entry[2];
-                PhoneNumber cellNumber = new PhoneNumber(entry[3]);
-                PhoneNumber homeNumber = new PhoneNumber(entry[4]);
-                String address = entry[5];
-                String birthDateString = entry[6];
+                String lastName = entry[0].trim();
+                String firstName = entry[1].trim();
+                String patronymic = entry[2].trim();
+                PhoneNumber cellNumber = new PhoneNumber(entry[3].trim());
+                PhoneNumber homeNumber = new PhoneNumber(entry[4].trim());
+                String address = entry[5].trim();
+                String birthDateString = entry[6].trim();
+                String comment = " ";
+                if (entry.length == 8) {
+                    comment = entry[7].trim();
+                }
+                if (!birthDateString.isEmpty()) {
+                    LocalDate birthDate = LocalDate.parse(birthDateString, dateTimeFormatter);
+                }
+                Contact contact = new Contact(firstName, lastName, patronymic,
+                        cellNumber, homeNumber, address, null, comment);
+                if (contacts.contains(contact)) {
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setHeaderText("Повторный контакт");
 
-                LocalDate birthDate = LocalDate.parse(birthDateString, dateTimeFormatter);
-                Contact contact = new Contact(lastName, firstName, patronymic,
-                        cellNumber, homeNumber, address, birthDate);
-                System.out.println(contact);
-                contacts.add(contact);
+                    ScrollPane scroll = new ScrollPane();
+                    scroll.setContent(new TextArea("Встречен повторный контакт, чтобы пропустить нажмите Отмена, " +
+                            "если вы хотите добавить его как '" + contact.getFirstName() + "(copy)' Нажмтие Ок"));
+                    alert.getDialogPane().setContent(scroll);
+                    Optional<ButtonType> result = alert.showAndWait();
+                    if (result.isPresent() && result.get() == ButtonType.OK) {
+                        contact.setFirstName(contact.getFirstName() + "(copy)");
+                        contacts.add(contact);
+                    }
+                } else {
+                    addContact(contact);
+                }
             }
         }
     }
 
-    public void storeContacts(String fileName) throws IOException {
-        Path path = Paths.get(fileName);
-        try (BufferedWriter bw = Files.newBufferedWriter(path)) {
+    public void storeContacts(File file) throws IOException {
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
             for (Contact contact : contacts) {
-                bw.write(String.format("%s;%s;%s;%s;%s;%s;%s",
-                        contact.getLastName(),
-                        contact.getFirstName(),
-                        contact.getPatronymic(),
-                        contact.getCellNumber(),
-                        contact.getHomeNumber(),
-                        contact.getAddress(),
-                        contact.getBirthdate().format(dateTimeFormatter)
-                ));
+                try {
+                    bw.write(String.format("%s ;%s ;%s ;%s ;%s ;%s ;%s ;%s ",
+                            contact.getLastName(),
+                            contact.getFirstName(),
+                            contact.getPatronymic(),
+                            contact.getCellNumber(),
+                            contact.getHomeNumber(),
+                            contact.getAddress(),
+                            contact.getBirthdateString(),
+                            contact.getComment()
+                    ));
+                } catch (Exception e) {
+                    if (contact == null) System.out.println("contact");
+                    if (contact.getBirthdate() == null) System.out.println("birthdate");
+                    if (dateTimeFormatter == null) System.out.println("dateTimeFormatter");
+                }
                 bw.newLine();
             }
         }
+
     }
 }

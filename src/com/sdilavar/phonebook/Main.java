@@ -1,10 +1,13 @@
 package com.sdilavar.phonebook;
 
+import com.sdilavar.phonebook.datamodel.ContactData;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import java.io.File;
 
 public class Main extends Application {
 
@@ -21,5 +24,15 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    @Override
+    public void stop() {
+        try {
+            ContactData.getInstance().storeContacts(new File("data.txt"));
+        } catch (Exception e) {
+            Utils.alertUser(e);
+        }
+        System.out.println("closing");
     }
 }

@@ -5,9 +5,10 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 
 public class Utils {
-    public static void alertUser(Exception e){
+    public static void alertUser(Exception e) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setHeaderText("IOException: the specified path led to an error, check it again");
+        alert.setHeaderText(e.getMessage());
+        System.out.println(e.getMessage());
 
         ScrollPane scroll = new ScrollPane();
         StringBuilder sb = new StringBuilder();
@@ -18,7 +19,5 @@ public class Utils {
 
         alert.getDialogPane().setContent(scroll);
         alert.showAndWait();
-
-        e.printStackTrace();
     }
 }

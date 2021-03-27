@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
-
 <BorderPane fx:id="mainBorderPane" prefHeight="455.0" prefWidth="859.0" xmlns="http://javafx.com/javafx/11.0.1"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sdilavar.phonebook.Controller">
     <top>
         <MenuBar>
             <Menu text="Файл">
-                <MenuItem text="Добавить"/>
+                <MenuItem text="Добавить" onAction="#showNewContactDialog"/>
                 <SeparatorMenuItem/>
                 <MenuItem text="Редактировать"/>
                 <SeparatorMenuItem/>
                 <MenuItem text="Удалить"/>
                 <SeparatorMenuItem/>
-                <MenuItem text="Выход"/>
+                <MenuItem text="Выход" onAction="#closeAppAction"/>
             </Menu>
             <Menu text="Настройки">
-                <MenuItem text="Импортировать" onAction="#showImportDialog"/>
+                <MenuItem text="Импортировать" onAction="#importContactsDialog"/>
                 <SeparatorMenuItem/>
-                <MenuItem text="Экспортировать" onAction="#showExportDialog"/>
+                <MenuItem text="Экспортировать" onAction="#exportContactsDialog"/>
             </Menu>
             <Menu>
                 <graphic>
@@ -36,45 +34,27 @@
                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
             </columnResizePolicy>
             <columns>
-                <TableColumn editable="false" sortable="false" text="Фамилия">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="lastname"/>
-                    </cellValueFactory>
+                <TableColumn fx:id="lastName" editable="false" sortable="false" text="Фамилия">
                 </TableColumn>
-                <TableColumn editable="false" sortable="false" text="Имя">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="firstName"/>
-                    </cellValueFactory>
+                <TableColumn fx:id="firstName" editable="false" sortable="false" text="Имя">
                 </TableColumn>
-                <TableColumn editable="false" sortable="false" text="Отчество">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="patronymic"/>
-                    </cellValueFactory>
+                <TableColumn fx:id="patronymic" editable="false" sortable="false" text="Отчество">
                 </TableColumn>
-                <TableColumn editable="false" sortable="false" text="Мобильный &#10;телефон">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="cellNumber"/>
-                    </cellValueFactory>
+
+                <TableColumn editable="false" sortable="false" text="Телефон">
+                    <columns>
+                        <TableColumn fx:id="cellNumber" editable="false" sortable="false" text="Мобильный">
+                        </TableColumn>
+                        <TableColumn fx:id="homeNumber" editable="false" sortable="false" text="Домашний">
+                        </TableColumn>
+                    </columns>
                 </TableColumn>
-                <TableColumn editable="false" sortable="false" text="Домашний &#10;телефон">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="homeNumber"/>
-                    </cellValueFactory>
+
+                <TableColumn fx:id="address" editable="false" sortable="false" text="Адрес">
                 </TableColumn>
-                <TableColumn editable="false" sortable="false" text="Адрес">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="address"/>
-                    </cellValueFactory>
+                <TableColumn fx:id="birthdate" editable="false" sortable="false" text="День&#10;рождения">
                 </TableColumn>
-                <TableColumn editable="false" sortable="false" text="День&#10;рождения">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="birthDate"/>
-                    </cellValueFactory>
-                </TableColumn>
-                <TableColumn editable="false" sortable="false" text="Комментарий">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="comment"/>
-                    </cellValueFactory>
+                <TableColumn fx:id="comment" editable="false" sortable="false" text="Комментарий">
                 </TableColumn>
             </columns>
         </TableView>
@@ -84,7 +64,8 @@
         <HBox>
             <Button alignment="CENTER" prefHeight="26.0" prefWidth="120.0" text="Удалить" HBox.hgrow="ALWAYS"/>
             <Button prefHeight="26.0" prefWidth="126.0" text="Редактировать" HBox.hgrow="ALWAYS"/>
-            <Button prefHeight="26.0" prefWidth="126.0" text="Добавить" HBox.hgrow="ALWAYS"/>
+            <Button prefHeight="26.0" prefWidth="126.0" text="Добавить" HBox.hgrow="ALWAYS"
+                    onAction="#showNewContactDialog"/>
             <TextField promptText="Строка поиска" HBox.hgrow="ALWAYS"/>
             <Button prefHeight="26.0" prefWidth="126.0" text="Поиск" HBox.hgrow="ALWAYS"/>
         </HBox>
