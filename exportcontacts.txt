@@ -1,3 +1,3 @@
-Dilavar ;Shair(copy) ;Khamayunovich ;79261059145 ;74957050167 ;Komsomolskiy pr-t 24/2 ;30-08-2001 ;comment 
+Dilavar ;CHANGED ;Khamayunovich ;79261059145 ;74957050167 ;Komsomolskiy pr-t 24/2 ;30-08-2001 ;comment 
 Dilavar ;Khatera ;MKhamayun ;79256329895 ;74957050167 ;Komsomolskiy pr-t 24/2 ;24-04-1990 ; 
-Dilavar ;Shair ;Khamayunovich ;79261059145 ;74957050167 ;Komsomolskiy pr-t 24/2 ;30-08-2001 ;comment 
+Dilavar ;Shair(copy) ;Khamayunovich ;79261059145 ;74957050167 ;Komsomolskiy pr-t 24/2 ;30-08-2001 ;comment 

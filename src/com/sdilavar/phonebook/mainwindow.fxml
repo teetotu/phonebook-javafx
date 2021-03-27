@@ -9,7 +9,7 @@
             <Menu text="Файл">
                 <MenuItem text="Добавить" onAction="#showNewContactDialog"/>
                 <SeparatorMenuItem/>
-                <MenuItem text="Редактировать"/>
+                <MenuItem text="Редактировать" onAction="#rowEditHandler"/>
                 <SeparatorMenuItem/>
                 <MenuItem text="Удалить" onAction="#rowDeletionHandler"/>
                 <SeparatorMenuItem/>
@@ -64,7 +64,8 @@
         <HBox>
             <Button text="Удалить" alignment="CENTER" prefHeight="26.0" prefWidth="120.0" HBox.hgrow="ALWAYS"
                     onAction="#rowDeletionHandler"/>
-            <Button text="Редактировать" prefHeight="26.0" prefWidth="126.0" HBox.hgrow="ALWAYS"/>
+            <Button text="Редактировать" prefHeight="26.0" prefWidth="126.0" HBox.hgrow="ALWAYS"
+                    onAction="#rowEditHandler"/>
             <Button text="Добавить" prefHeight="26.0" prefWidth="126.0" HBox.hgrow="ALWAYS"
                     onAction="#showNewContactDialog"/>
             <TextField fx:id="searchField" promptText="Строка поиска" HBox.hgrow="ALWAYS"/>

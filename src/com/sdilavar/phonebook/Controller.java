@@ -164,6 +164,12 @@ public class Controller {
     }
 
     @FXML
+    private void rowEditHandler() {
+        tableView.getSelectionModel().getSelectedItem().setFirstName("CHANGED");
+        tableView.refresh();
+    }
+
+    @FXML
     private void rowDeletionHandler() {
         tableView.getItems().remove(tableView.getSelectionModel().getSelectedItem());
         ContactData.getInstance().getContacts().remove(tableView.getSelectionModel().getSelectedItem());
