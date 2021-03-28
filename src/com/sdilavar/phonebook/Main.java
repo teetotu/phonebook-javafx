@@ -8,6 +8,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Main extends Application {
 
@@ -29,8 +32,16 @@ public class Main extends Application {
     @Override
     public void stop() {
         try {
-            ContactData.getInstance().storeContacts(new File("data.txt"));
+            String s = new File("").getAbsolutePath();
+            ContactData.getInstance().storeContacts(new File(s + "/data.txt"));
         } catch (Exception e) {
+            String property = "java.io.tmpdir";
+            String tempDir = System.getProperty(property);
+            try {
+                ContactData.getInstance().storeContacts(new File(tempDir + "/data.txt"));
+            } catch (IOException ioException) {
+                Utils.alertUser(ioException);
+            }
             Utils.alertUser(e);
         }
         System.out.println("closing");

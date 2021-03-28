@@ -135,6 +135,18 @@ public class Contact {
         this.comment = new SimpleStringProperty(comment);
     }
 
+    public void copyContact(Contact contact) {
+        this.firstName = new SimpleStringProperty(contact.getFirstName().trim());
+        this.lastName = new SimpleStringProperty(contact.getLastName().trim());
+        this.patronymic =
+                new SimpleStringProperty(contact.getPatronymic().trim().isEmpty() ? "" : contact.getPatronymic());
+        this.cellNumber = new SimpleObjectProperty<>(contact.getCellNumber());
+        this.homeNumber = new SimpleObjectProperty<>(contact.getHomeNumber());
+        this.address = new SimpleStringProperty(contact.getAddress().trim());
+        this.birthdate = new SimpleObjectProperty<>(contact.getBirthdate());
+        this.comment = new SimpleStringProperty(contact.getComment().trim());
+    }
+
     @Override
     public boolean equals(Object other) {
         if (this == other) {

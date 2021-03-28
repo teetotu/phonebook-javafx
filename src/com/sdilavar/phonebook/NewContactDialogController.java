@@ -9,21 +9,21 @@ import javafx.scene.control.TextField;
 
 public class NewContactDialogController {
     @FXML
-    private TextField addressField;
+    public TextField addressField;
     @FXML
-    private TextField homeNumberField;
+    public TextField homeNumberField;
     @FXML
-    private TextField cellNumberField;
+    public TextField cellNumberField;
     @FXML
-    private TextField patronymicField;
+    public TextField patronymicField;
     @FXML
-    private DatePicker birthDateDatePicker;
+    public DatePicker birthDateDatePicker;
     @FXML
-    private TextField lastNameField;
+    public TextField lastNameField;
     @FXML
-    private TextField firstNameField;
+    public TextField firstNameField;
     @FXML
-    private TextArea commentTextArea;
+    public TextArea commentTextArea;
 
     @FXML
     public Contact processInput() {
